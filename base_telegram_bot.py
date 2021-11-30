@@ -20,7 +20,7 @@ class BaseTelegramBotResponse(BaseModel):
     result: Any
 
 
-_T = TypeVar("_T")
+_T = TypeVar("_T", bound=BaseModel)
 
 
 class BaseTelegramBot:
