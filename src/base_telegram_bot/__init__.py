@@ -8,6 +8,8 @@ __all__ = ["BaseTelegramBot", "TelegramBotError"]
 
 
 class TelegramBotError(Exception):
+    response: requests.Response
+
     def __init__(self, *args: Any, response: requests.Response) -> None:
         self.response = response
         super().__init__(*args)
@@ -22,6 +24,10 @@ _T = TypeVar("_T", bound=BaseModel)
 
 
 class BaseTelegramBot:
+    token: str
+    endpoint: str
+    _session: requests.Session
+
     def __init__(self, token: str, endpoint: str = "https://api.telegram.org"):
         self.token = token
         self.endpoint = endpoint
