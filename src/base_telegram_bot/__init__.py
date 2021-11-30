@@ -2,9 +2,7 @@ from json import JSONDecodeError
 from typing import Any, Literal, TypeVar
 
 import requests
-from pydantic import (
-    BaseModel,  # TODO: Can we just drop pydantic dependency? Or make it optional
-)
+from pydantic import BaseModel
 
 __all__ = ["BaseTelegramBot", "TelegramBotError"]
 
