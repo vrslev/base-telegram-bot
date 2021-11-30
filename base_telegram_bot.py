@@ -2,7 +2,9 @@ from json import JSONDecodeError
 from typing import Any, Literal, TypeVar
 
 import requests
-from pydantic import BaseModel
+from pydantic import (
+    BaseModel,  # TODO: Can we just drop pydantic dependency? Or make it optional
+)
 
 __all__ = ["BaseTelegramBot"]
 
@@ -22,10 +24,9 @@ _T = TypeVar("_T")
 
 
 class BaseTelegramBot:
-    endpoint = "https://api.telegram.org"
-
-    def __init__(self, token: str):
+    def __init__(self, token: str, endpoint: str = "https://api.telegram.org"):
         self.token = token
+        self.endpoint = endpoint
         self._session = requests.Session()
 
     def _build_url(self, method: str):
