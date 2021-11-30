@@ -6,7 +6,7 @@ from pydantic import (
     BaseModel,  # TODO: Can we just drop pydantic dependency? Or make it optional
 )
 
-__all__ = ["BaseTelegramBot"]
+__all__ = ["BaseTelegramBot", "TelegramBotError"]
 
 
 class TelegramBotError(Exception):
