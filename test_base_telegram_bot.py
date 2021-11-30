@@ -138,11 +138,16 @@ def test_parse_response_returns_custom_model(bot: BaseTelegramBot):
     ) == CustomResponse(ok=True, result=exp_result)
 
 
+@pytest.mark.parametrize("endpoint", ("https://example.com", None))
 @responses.activate
-def test_make_request(bot: BaseTelegramBot, token: str):
+def test_make_request(bot: BaseTelegramBot, token: str, endpoint: str | None):
+    if endpoint is not None:
+        bot.endpoint = copy(endpoint)
+    else:
+        endpoint = copy(bot.endpoint)
     responses.add(
         method=responses.POST,
-        url=f"https://api.telegram.org/bot{token}/getUpdates",
+        url=f"{endpoint}/bot{token}/getUpdates",
         json={"ok": True, "result": {"foo": "bar"}},
         match=[responses.matchers.json_params_matcher({"id": 101})],  # type: ignore
     )
