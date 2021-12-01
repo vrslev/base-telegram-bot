@@ -1,8 +1,6 @@
-from __future__ import annotations
-
 from copy import copy
 from json import JSONDecodeError
-from typing import Any
+from typing import Any, Optional
 
 import pytest
 import requests
@@ -56,7 +54,7 @@ def test_parse_response_not_json(bot: BaseTelegramBot):
 
 def test_parse_response_no_description(bot: BaseTelegramBot):
     class MyResponse:
-        reason: str | None = None
+        reason: Optional[str] = None
 
         def json(self) -> dict[Any, Any]:
             return {}
@@ -72,7 +70,7 @@ def test_parse_response_no_description(bot: BaseTelegramBot):
 
 def test_parse_response_with_description(bot: BaseTelegramBot):
     class MyResponse:
-        reason: str | None = None
+        reason: Optional[str] = None
 
         def json(self) -> dict[Any, Any]:
             return {"description": "Not Found"}
@@ -142,7 +140,7 @@ def test_parse_response_returns_custom_model(bot: BaseTelegramBot):
 
 @pytest.mark.parametrize("endpoint", ("https://example.com", None))
 @responses.activate
-def test_make_request(bot: BaseTelegramBot, token: str, endpoint: str | None):
+def test_make_request(bot: BaseTelegramBot, token: str, endpoint: Optional[str]):
     if endpoint is not None:
         bot.endpoint = copy(endpoint)
     else:
