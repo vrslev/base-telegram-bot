@@ -135,7 +135,9 @@ def test_parse_response_returns_custom_model(bot: BaseTelegramBot):
 
     assert bot.parse_response(
         response=MyResponse(), model=CustomResponse  # type: ignore
-    ) == CustomResponse(ok=True, result=exp_result)
+    ) == CustomResponse(
+        ok=True, result=exp_result  # type: ignore
+    )
 
 
 @pytest.mark.parametrize("endpoint", ("https://example.com", None))
