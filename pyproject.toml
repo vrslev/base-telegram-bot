@@ -3,6 +3,7 @@ name = "base_telegram_bot"
 version = "0"
 description = "Base Telegram bot based on Pydantic models"
 authors = ["Lev Vereshchagin <mail@vrslev.com>"]
+readme = "README.md"
 repository = "https://github.com/vrslev/base-telegram-bot"
 license = "MIT"
 include = ["src/base_telegram_bot/py.typed"]
