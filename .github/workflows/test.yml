@@ -24,22 +24,24 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Poetry
-        run: |
-          pip install -U poetry
-          poetry config virtualenvs.in-project true
-
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: .venv
+          path: |
+            ~/.cache/pip
+            ~/.cache/pypoetry
           key: test-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install Poetry
+        run: |
+          pip install -U poetry
+          poetry config virtualenvs.create false
 
       - name: Install dependencies
         run: poetry install
 
       - name: Run tests
-        run: poetry run pytest --color=yes --cov
+        run: pytest --color=yes --cov
 
   typing:
     runs-on: ubuntu-latest
@@ -63,13 +65,7 @@ jobs:
       - name: Install Poetry
         run: |
           pip install -U poetry
-          poetry config virtualenvs.in-project true
-
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: .venv
-          key: test-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+          poetry config virtualenvs.create false
 
       - name: Install dependencies
         run: poetry install
@@ -78,7 +74,7 @@ jobs:
         run: npm install -g --no-package-lock --no-save pyright
 
       - name: Run Pyright
-        run: pyright --venv-path .venv
+        run: pyright
 
   lint:
     runs-on: ubuntu-latest
