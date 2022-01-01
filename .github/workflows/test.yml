@@ -78,7 +78,7 @@ jobs:
         run: npm install -g --no-package-lock --no-save pyright
 
       - name: Run Pyright
-        run: pyright
+        run: pyright --venv-path .venv
 
   lint:
     runs-on: ubuntu-latest
