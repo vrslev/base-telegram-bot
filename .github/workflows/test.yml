@@ -34,6 +34,7 @@ jobs:
 
       - name: Install Poetry
         run: |
+          pip install -U pip
           pip install -U poetry==v1.2.0a2
           poetry config virtualenvs.create false
 
@@ -64,6 +65,7 @@ jobs:
 
       - name: Install Poetry
         run: |
+          pip install -U pip
           pip install -U poetry==v1.2.0a2
           poetry config virtualenvs.create false
 
