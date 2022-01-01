@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "base_telegram_bot"
-version = "0.0.1" # TODO: Remove this
+version = "0"
 description = "Base Telegram bot based on Pydantic models"
 authors = ["Lev Vereshchagin <mail@vrslev.com>"]
 repository = "https://github.com/vrslev/base-telegram-bot"
@@ -24,8 +24,8 @@ responses = "0.16.0"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-# [tool.poetry-version-plugin] # TODO
-# source = "git-tag"
+[tool.poetry-version-plugin]
+source = "git-tag"
 
 [tool.black]
 target-version = ["py39", "py310"]
