@@ -23,28 +23,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      # - name: Cache
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       ~/.cache/pip
-      #       ~/.cache/pypoetry
-      #     key: test-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
-
-      # - name: Install Poetry
-      #   run: |
-      #     pip install -U poetry
-      #     poetry config virtualenvs.create false
-
-      # - name: Install package
-      #   run: poetry install --no-dev -E test
-
-      # - name: Test
-      #   run: pytest --color=yes --cov
 
       - name: Install Poetry
         run: |
-          pip install -U poetry==v1.2.0a2
+          pip install -U poetry
           poetry config virtualenvs.in-project true
 
       - name: Cache
@@ -57,7 +39,7 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: pytest --color=yes --cov
+        run: poetry run pytest --color=yes --cov
 
   typing:
     runs-on: ubuntu-latest
@@ -80,9 +62,14 @@ jobs:
 
       - name: Install Poetry
         run: |
-          pip install -U pip
-          pip install -U poetry==v1.2.0a2
-          poetry config virtualenvs.create false
+          pip install -U poetry
+          poetry config virtualenvs.in-project true
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: test-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
 
       - name: Install dependencies
         run: poetry install
