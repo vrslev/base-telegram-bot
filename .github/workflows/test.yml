@@ -1,15 +1,18 @@
-name: Test
+name: Tests
 
 on:
   push:
-    branches:
-      - main
-
   pull_request:
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.9, "3.10"]
+      fail-fast: false
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -17,21 +20,26 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
 
       - name: Cache
         uses: actions/cache@v2
         with:
           path: |
-            ~/.cache/pre-commit
             ~/.cache/pip
-          key: lint-${{ hashFiles('.pre-commit-config.yaml') }}
+            ~/.cache/pypoetry
+          key: test-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
 
-      - name: Install pre-commit
-        run: pip install -U pre-commit
+      - name: Install Poetry
+        run: |
+          pip install -U poetry==v1.2.0a2
+          poetry config virtualenvs.create false
 
-      - name: Lint
-        run: pre-commit run --color=always --all-files
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: pytest --color=yes --cov
 
   typing:
     runs-on: ubuntu-latest
@@ -52,28 +60,22 @@ jobs:
             ~/.cache/pypoetry
           key: typing-${{ hashFiles('pyproject.toml') }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
-
       - name: Install Poetry
         run: |
-          pip install -U poetry
+          pip install -U poetry==v1.2.0a2
           poetry config virtualenvs.create false
 
-      - name: Install package
-        run: poetry install --no-dev -E test
+      - name: Install dependencies
+        run: poetry install
 
       - name: Install Pyright
         run: npm install -g --no-package-lock --no-save pyright
 
-      - name: Check types
+      - name: Run Pyright
         run: pyright
 
-  test:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -81,23 +83,18 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.10"
 
       - name: Cache
         uses: actions/cache@v2
         with:
           path: |
             ~/.cache/pip
-            ~/.cache/pypoetry
-          key: test-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+            ~/.cache/pre-commit
+          key: lint-${{ hashFiles('pyproject.toml') }}
 
-      - name: Install Poetry
-        run: |
-          pip install -U poetry
-          poetry config virtualenvs.create false
+      - name: Install pre-commit
+        run: pip install -U pre-commit
 
-      - name: Install package
-        run: poetry install --no-dev -E test
-
-      - name: Test
-        run: pytest --color=yes --cov
+      - name: Run pre-commit
+        run: pre-commit run --color=always --all-files
