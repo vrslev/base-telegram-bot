@@ -53,7 +53,7 @@ class BaseTelegramBot:
         except requests.HTTPError as exc:
             raise TelegramBotError(*exc.args, response=response)
 
-        return model(**resp_json)
+        return model(**resp_json)  # type: ignore
 
     def make_request(
         self,
